@@ -80,7 +80,11 @@ class IEEE:
 
         self.driver.get("https://ieeexplore.ieee.org/xpl/tocresult.jsp?isnumber=10005208&punumber=6287639")  # Открыть страницу со списком RFC в браузере
         self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.issue-list-container')))
-        while True:
+
+        max_retries = 4
+        retry_count = 0
+        while retry_count<max_retries:
+
             el_list = self.driver.find_elements(By.XPATH, '//div[contains(@class, \'List-results-items\')]')
             # print(f'len(el_list) = {len(el_list)}')
             for el in el_list:
@@ -118,6 +122,7 @@ class IEEE:
                 time.sleep(3)
                 self.logger.info(f'Выполнен переход на след. страницу: ')
                 print('=' * 90)
+                retry_count += 1
             except:
                 self.logger.exception('Не удалось найти переход на след. страницу. Прерывание цикла обработки')
                 break
